@@ -1,5 +1,7 @@
 package com.example.abdo.twitter_light.Activities.API;
 
+import com.example.abdo.twitter_light.Activities.Classes.Followers;
+
 import java.util.List;
 
 import retrofit2.Call;
@@ -12,6 +14,6 @@ import retrofit2.http.Query;
 
 public interface ApiInterface
 {
-    @GET("friends/ids")
-    Call<List<Long> > getFriendsIDs(@Query("user_id")Long id);
+    @GET("followers/list.json")
+    Call<Followers> getFollowers(@Query("user_id")Long id);
 }

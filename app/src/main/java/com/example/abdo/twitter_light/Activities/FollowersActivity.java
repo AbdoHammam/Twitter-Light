@@ -10,21 +10,10 @@ import com.example.abdo.twitter_light.Activities.API.ApiClient;
 import com.example.abdo.twitter_light.Activities.API.ApiInterface;
 import com.example.abdo.twitter_light.Activities.Adapters.FollowersAdapter;
 import com.example.abdo.twitter_light.Activities.Classes.Follower;
+import com.example.abdo.twitter_light.Activities.Classes.Followers;
 import com.example.abdo.twitter_light.R;
-import com.twitter.sdk.android.core.OAuthSigning;
-import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterAuthToken;
-import com.twitter.sdk.android.core.TwitterCore;
-import com.twitter.sdk.android.core.TwitterSession;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.util.List;
-import java.util.Map;
 
-import javax.net.ssl.HttpsURLConnection;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -35,7 +24,6 @@ public class FollowersActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private List<Follower> followers;
-    private List<Long> followersIDs;
     private FollowersAdapter adapter;
     private ApiInterface apiInterface;
     @Override
@@ -49,16 +37,16 @@ public class FollowersActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         apiInterface = ApiClient.getApiClient().create(ApiInterface.class);
-        Call<List<Long> > call = apiInterface.getFriendsIDs(id);
-        call.enqueue(new Callback<List<Long>>() {
+        Call<Followers> call = apiInterface.getFollowers(id);
+        call.enqueue(new Callback<Followers>() {
             @Override
-            public void onResponse(Call<List<Long>> call, Response<List<Long>> response) {
-                followersIDs = response.body();
-                Toast.makeText(FollowersActivity.this,followersIDs.size(),Toast.LENGTH_SHORT).show();
+            public void onResponse(Call<Followers> call, Response<Followers> response) {
+                followers = response.body().getFollowers();
+                Toast.makeText(FollowersActivity.this,followers.size(),Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onFailure(Call<List<Long>> call, Throwable t) {
+            public void onFailure(Call<Followers> call, Throwable t) {
 
             }
         });

@@ -1,16 +1,24 @@
 package com.example.abdo.twitter_light.Activities.Classes;
 
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by abdo on 6/14/17.
  */
 
 public class Follower
 {
+    @SerializedName("user_id")
     private Long id;
+    @SerializedName("name")
     private String username;
+    @SerializedName("screen_name")
     private String screenname;
+    @SerializedName("profile_image_url_https")
     private String profilePicURL;
+    @SerializedName("profile_background_image_url_https")
     private String backgroundImageURL;
+    @SerializedName("description")
     private String bio;
 
     public Long getId() {
