@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     String twitter_secret = "xA0YKURETtDDYU2WD4f8hqsnUPFSgF1Rl5Y9g6lG5u6WdXJiwZ";
     TwitterLoginButton  loginButton;
     String username;
-    String id="id";
+    Long id = 0L;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         loginButton.setCallback(new Callback<TwitterSession>() {
             @Override
             public void success(Result<TwitterSession> result) {
-                id = String.valueOf(result.data.getUserId());
+                id = result.data.getUserId();
                 username = String.valueOf(result.data.getUserName());
 
             }
@@ -64,7 +64,9 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         loginButton.onActivityResult(requestCode, resultCode, data);
         Intent intent = new Intent(MainActivity.this,FollowersActivity.class);
+        intent.putExtra("id",id);
         startActivity(intent);
+        finish();
     }
 
 }
