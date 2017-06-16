@@ -1,6 +1,7 @@
 package com.example.abdo.twitter_light.Activities.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.abdo.twitter_light.Activities.Classes.Follower;
+import com.example.abdo.twitter_light.Activities.TweetsActivity;
 import com.example.abdo.twitter_light.R;
 
 import java.util.List;
@@ -20,7 +22,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.MyViewHolder> {
     private List<Follower> followers;
-    private Context context;
+    private static Context context;
 
     public FollowersAdapter(List<Follower> followers, Context context) {
         this.followers = followers;
@@ -40,6 +42,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.MyVi
         //holder.imgProfilePicture. // TODO : add it using glide
         holder.bio.setText(followers.get(position).getBio());
 
+
     }
 
     @Override
@@ -57,6 +60,14 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.MyVi
             username = (TextView) itemView.findViewById(R.id.username);
             screenname = (TextView) itemView.findViewById(R.id.screenname);
             bio = (TextView) itemView.findViewById(R.id.bio);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, TweetsActivity.class);
+                    intent.putExtra("id",getItemId());
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 }

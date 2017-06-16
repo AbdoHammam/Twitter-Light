@@ -4,17 +4,28 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.abdo.twitter_light.R;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.DefaultLogger;
+import com.twitter.sdk.android.core.OAuthSigning;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterConfig;
+import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.Map;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class MainActivity extends AppCompatActivity {
     String twitter_key = "sop7FgxeonfPcUh5Xs6gBaDte";
@@ -49,6 +60,11 @@ public class MainActivity extends AppCompatActivity {
             public void success(Result<TwitterSession> result) {
                 id = result.data.getUserId();
                 username = String.valueOf(result.data.getUserName());
+                try {
+                    TwitterAdvancedSetup();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
             }
             @Override
@@ -66,6 +82,20 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("id",id);
         startActivity(intent);
         finish();
+    }
+    private void TwitterAdvancedSetup() throws IOException {
+        TwitterAuthConfig authConfig = TwitterCore.getInstance().getAuthConfig();
+        TwitterSession session = TwitterCore.getInstance().getSessionManager().getActiveSession();
+        TwitterAuthToken authToken = session.getAuthToken();
+        OAuthSigning oauthSigning = new OAuthSigning(authConfig, authToken);
+        Map<String, String> authHeaders = oauthSigning.getOAuthEchoHeadersForVerifyCredentials();
+        URL url = new URL("https://api.twitter.com/1.1/check_credentials.json");
+        HttpsURLConnection connection = (HttpsURLConnection)url.openConnection();
+        connection.setRequestMethod("GET");
+        for (Map.Entry<String, String> entry : authHeaders.entrySet()) {
+            Toast.makeText(MainActivity.this,entry.getKey() + " " + entry.getValue(),Toast.LENGTH_SHORT).show();
+            connection.setRequestProperty(entry.getKey(), entry.getValue());
+        }
     }
 
 }

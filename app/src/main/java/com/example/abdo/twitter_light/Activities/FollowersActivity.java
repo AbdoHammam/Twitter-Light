@@ -50,9 +50,7 @@ public class FollowersActivity extends AppCompatActivity {
 
             }
         });
-        //TODO : get followers from API
-        //adapter = new FollowersAdapter(followers,this);
-        //recyclerView.setAdapter(adapter);
+
     }
 
 }
