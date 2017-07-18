@@ -18,7 +18,7 @@ import retrofit2.http.Query;
 
 public class ApiClient extends TwitterApiClient {
 
-    private static final String BASE_URL = "https://api.twitter.com/1.1/";
+    private static final String BASE_URL = "https://api.twitter.com/";
     private static Retrofit retrofit;
     public static Retrofit getApiClient()
     {

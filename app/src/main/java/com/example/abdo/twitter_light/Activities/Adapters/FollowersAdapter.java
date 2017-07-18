@@ -8,10 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.abdo.twitter_light.Activities.Classes.Follower;
 import com.example.abdo.twitter_light.Activities.TweetsActivity;
 import com.example.abdo.twitter_light.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -22,38 +25,56 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.MyViewHolder> {
     private List<Follower> followers;
+
     private static Context context;
 
-    public FollowersAdapter(List<Follower> followers, Context context) {
-        this.followers = followers;
+    public FollowersAdapter(Context context) {
         this.context = context;
+    }
+
+    public void updateAdapter(List<Follower> followers) {
+        if (followers != null) {
+            this.followers = followers;
+        } else {
+            this.followers = new ArrayList<>();
+        }
+        notifyDataSetChanged();
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_layout,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_layout, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
+
+
         holder.username.setText(followers.get(position).getUsername());
         holder.screenname.setText(followers.get(position).getScreenname());
-        //holder.imgProfilePicture. // TODO : add it using glide
+        Glide.with(context).load(followers.get(position).getProfilePicURL())
+                .thumbnail(0.5f)
+                .crossFade()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.imgProfilePicture);
         holder.bio.setText(followers.get(position).getBio());
-
-
+        holder.id = followers.get(position).getId();
+        holder.follower = followers.get(position);
     }
 
     @Override
     public int getItemCount() {
-        return followers.size();
+        return followers == null ? 0 : followers.size();
     }
-    public static class MyViewHolder extends RecyclerView.ViewHolder{
+
+    public static class MyViewHolder extends RecyclerView.ViewHolder {
         CircleImageView imgProfilePicture;
         TextView username;
         TextView screenname;
         TextView bio;
+        Long id;
+        Follower follower;
         public MyViewHolder(View itemView) {
             super(itemView);
             imgProfilePicture = (CircleImageView) itemView.findViewById(R.id.imgProfilePicture);
@@ -64,7 +85,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.MyVi
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, TweetsActivity.class);
-                    intent.putExtra("id",getItemId());
+                    intent.putExtra("follower", follower);
                     context.startActivity(intent);
                 }
             });
