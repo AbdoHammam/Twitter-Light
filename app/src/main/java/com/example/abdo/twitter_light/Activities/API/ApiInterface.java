@@ -1,10 +1,6 @@
 package com.example.abdo.twitter_light.Activities.API;
 
-import com.example.abdo.twitter_light.Activities.Classes.Followers;
-
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -24,4 +20,6 @@ public interface ApiInterface {
     @GET("1.1/followers/list.json")
     Call<GetFollowersResponse> getFollowers(@Header("Authorization") String authorization, @Query("cursor") Integer cursor, @Query("user_id") Long userId);
 
+    @GET("1.1/users/show.json")
+    Call<GetUserInfoResponse> getUserInfo(@Header("Authorization") String authorization, @Query("id") Long userId);
 }

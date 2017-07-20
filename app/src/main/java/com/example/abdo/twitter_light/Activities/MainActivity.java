@@ -1,31 +1,20 @@
 package com.example.abdo.twitter_light.Activities;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.example.abdo.twitter_light.R;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.DefaultLogger;
-import com.twitter.sdk.android.core.OAuthSigning;
 import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
-import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterConfig;
-import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
-
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Map;
-
-import javax.net.ssl.HttpsURLConnection;
 
 public class MainActivity extends AppCompatActivity {
     TwitterLoginButton loginButton;
@@ -58,8 +47,7 @@ public class MainActivity extends AppCompatActivity {
             public void success(Result<TwitterSession> result) {
                 id = result.data.getUserId();
                 username = String.valueOf(result.data.getUserName());
-                String token = result.data.getAuthToken().token;
-                String secret = result.data.getAuthToken().secret;
+
             }
 
             @Override
