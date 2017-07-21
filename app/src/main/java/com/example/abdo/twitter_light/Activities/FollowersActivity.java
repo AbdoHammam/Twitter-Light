@@ -9,8 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.abdo.twitter_light.Activities.API.ApiClient;
 import com.example.abdo.twitter_light.Activities.API.ApiInterface;
 import com.example.abdo.twitter_light.Activities.API.GetFollowersResponse;
@@ -20,6 +18,7 @@ import com.example.abdo.twitter_light.Activities.Adapters.FollowersAdapter;
 import com.example.abdo.twitter_light.Activities.Classes.Follower;
 import com.example.abdo.twitter_light.Activities.Classes.UserInfo;
 import com.example.abdo.twitter_light.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -36,7 +35,7 @@ public class FollowersActivity extends AppCompatActivity {
     private FollowersAdapter adapter;
     public static final String consumer_key = "Dme1JtqTXCTPssqoQTUEnIwSK";
     public static final String consumer_secret = "5tOImBv1N5VIZXspuqcygPDmSRjGKboaQE1Lj6RFM8sda20yOk";
-
+    public static String authorizationHeaderGetFollowers;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +71,7 @@ public class FollowersActivity extends AppCompatActivity {
                 if (tokenType != null && accessToken != null) {
 
 
-                    String authorizationHeaderGetFollowers = "Bearer " + accessToken;
+                    authorizationHeaderGetFollowers = "Bearer " + accessToken;
                     Integer cursor = -1;
 
                     ApiInterface apiServiceGetFollowers = ApiClient.getApiClient().create(ApiInterface.class);
@@ -123,17 +122,9 @@ public class FollowersActivity extends AppCompatActivity {
                             if (response != null && response.body() != null && response.isSuccessful()) {
                                 UserInfo userInfo = new UserInfo(response.body().getName(), response.body().getProfile_image_url_https(), response.body().getProfile_background_image_url_https());
 
+                                Picasso.with(FollowersActivity.this).load(userInfo.getProfile_image_url_https()).into(imgProfilePicture);
+                                Picasso.with(FollowersActivity.this).load(userInfo.getProfile_background_image_url_https()).into(background_photo);
 
-                                Glide.with(FollowersActivity.this).load(userInfo.getProfile_image_url_https())
-                                        .thumbnail(0.5f)
-                                        .crossFade()
-                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                        .into(imgProfilePicture);
-                                Glide.with(FollowersActivity.this).load(userInfo.getProfile_background_image_url_https())
-                                        .thumbnail(0.5f)
-                                        .crossFade()
-                                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                        .into(background_photo);
                                 numOfFollowers.setText(String.valueOf(numofFollowers) + " Followers");
                             }
                         }

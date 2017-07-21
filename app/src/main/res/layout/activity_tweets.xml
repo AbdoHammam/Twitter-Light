@@ -11,22 +11,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#01A9DB">
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:id="@+id/background_photo"
-        android:background="@drawable/twitter_logo"
-        android:contentDescription=""
-        />
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:id="@+id/background_photo"
+            android:background="@drawable/twitter_logo"
+            android:contentDescription=""
+            />
 
-    <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/imgProfilePicture"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:src="@drawable/profilepic"
-        app:border_width="1dp" />
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/imgProfilePicture"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:src="@drawable/profilepic"
+            app:border_width="1dp" />
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

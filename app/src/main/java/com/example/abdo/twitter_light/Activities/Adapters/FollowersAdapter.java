@@ -8,11 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.abdo.twitter_light.Activities.Classes.Follower;
 import com.example.abdo.twitter_light.Activities.TweetsActivity;
 import com.example.abdo.twitter_light.R;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,11 +52,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.MyVi
 
         holder.username.setText(followers.get(position).getUsername());
         holder.screenname.setText(followers.get(position).getScreenname());
-        Glide.with(context).load(followers.get(position).getProfilePicURL())
-                .thumbnail(0.5f)
-                .crossFade()
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(holder.imgProfilePicture);
+        Picasso.with(context).load(followers.get(position).getProfilePicURL()).into(holder.imgProfilePicture);
         holder.bio.setText(followers.get(position).getBio());
         holder.id = followers.get(position).getId();
         holder.follower = followers.get(position);
@@ -85,7 +80,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.MyVi
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, TweetsActivity.class);
-                    intent.putExtra("follower", follower);
+                    intent.putExtra("id", id);
                     context.startActivity(intent);
                 }
             });
