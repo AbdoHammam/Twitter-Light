@@ -54,8 +54,11 @@ public class TweetsActivity extends AppCompatActivity {
                 if (response != null && response.body() != null && response.isSuccessful()) {
                     UserInfo userInfo = new UserInfo(response.body().getName(), response.body().getProfile_image_url_https(), response.body().getProfile_background_image_url_https());
 
-                    Picasso.with(TweetsActivity.this).load(userInfo.getProfile_image_url_https()).into(imgProfilePicture);
-                    Picasso.with(TweetsActivity.this).load(userInfo.getProfile_background_image_url_https()).into(background_photo);
+                    Picasso.with(TweetsActivity.this).load(userInfo.getProfile_image_url_https())
+                            .resize(imgProfilePicture.getWidth(), imgProfilePicture.getHeight()).
+                            into(imgProfilePicture);
+                    Picasso.with(TweetsActivity.this).load(userInfo.getProfile_background_image_url_https()).
+                    into(background_photo);
                     username.setText(userInfo.getName());
                 }
             }

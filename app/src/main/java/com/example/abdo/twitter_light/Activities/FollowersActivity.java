@@ -1,6 +1,8 @@
 package com.example.abdo.twitter_light.Activities;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,7 +29,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FollowersActivity extends AppCompatActivity {
+public class FollowersActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     Long id;
     int numofFollowers = 0;
     private RecyclerView recyclerView;
@@ -36,11 +38,31 @@ public class FollowersActivity extends AppCompatActivity {
     public static final String consumer_key = "Dme1JtqTXCTPssqoQTUEnIwSK";
     public static final String consumer_secret = "5tOImBv1N5VIZXspuqcygPDmSRjGKboaQE1Lj6RFM8sda20yOk";
     public static String authorizationHeaderGetFollowers;
+    TextView username;
+    String encodedBase64;
+    String authorizationHeader;
+    SwipeRefreshLayout swipeRefreshLayout;
+    String contentTypeHeader;
+    String body;
+    ApiInterface apiService;
+    Call<OAuthResponse> call;
+    String tokenType = null;
+    String accessToken = null;
+    Integer cursor;
+    ApiInterface apiServiceGetFollowers;
+    Call<GetFollowersResponse> callGetFollowers;
+    List<Follower> followers = null;
+    Integer nextCursor = null;
+    String nextCursorStr = null;
+    Integer previousCursor = null;
+    String previousCursorStr = null;
+    Call<GetUserInfoResponse> userInfo;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_followers);
-
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.SwipeRefreshLayout);
+        username = (TextView) findViewById(R.id.username);
         Bundle bundle = getIntent().getExtras();
         id = bundle.getLong("id");
 
@@ -50,41 +72,40 @@ public class FollowersActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         adapter = new FollowersAdapter(this);
         recyclerView.setAdapter(adapter);
-        String encodedBase64 = base64Encode(consumer_key + ":" + consumer_secret);
-        final String authorizationHeader = "Basic " + encodedBase64;
-        String contentTypeHeader = "application/x-www-form-urlencoded;charset=UTF-8";
-        String body = "client_credentials";
+        encodedBase64 = base64Encode(consumer_key + ":" + consumer_secret);
+        authorizationHeader = "Basic " + encodedBase64;
+        contentTypeHeader = "application/x-www-form-urlencoded;charset=UTF-8";
+        body = "client_credentials";
+        CallAPI();
+        swipeRefreshLayout.setOnRefreshListener(this);
+    }
 
-        final ApiInterface apiService = ApiClient.getApiClient().create(ApiInterface.class);
-        Call<OAuthResponse> call = apiService.authenticate(authorizationHeader, contentTypeHeader, body);
+
+    public static String base64Encode(String token) {
+        String result = Base64.encodeToString(token.getBytes(), Base64.DEFAULT);
+        result = result.replace("\n", "");
+        return result;
+    }
+    public void CallAPI()
+    {
+        apiService = ApiClient.getApiClient().create(ApiInterface.class);
+        call = apiService.authenticate(authorizationHeader, contentTypeHeader, body);
         call.enqueue(new Callback<OAuthResponse>() {
             @Override
             public void onResponse(Call<OAuthResponse> call, Response<OAuthResponse> response) {
-                String tokenType = null;
-                String accessToken = null;
-
                 if (response != null && response.body() != null && response.isSuccessful()) {
                     tokenType = response.body().getTokenType();
                     accessToken = response.body().getAccessToken();
                 }
-
                 if (tokenType != null && accessToken != null) {
-
-
                     authorizationHeaderGetFollowers = "Bearer " + accessToken;
-                    Integer cursor = -1;
-
-                    ApiInterface apiServiceGetFollowers = ApiClient.getApiClient().create(ApiInterface.class);
-                    Call<GetFollowersResponse> callGetFollowers = apiServiceGetFollowers.getFollowers(authorizationHeaderGetFollowers, cursor, id);
+                    cursor = -1;
+                    apiServiceGetFollowers = ApiClient.getApiClient().create(ApiInterface.class);
+                    callGetFollowers = apiServiceGetFollowers.getFollowers(authorizationHeaderGetFollowers, cursor, id);
                     callGetFollowers.enqueue(new Callback<GetFollowersResponse>() {
                         @Override
                         public void onResponse(Call<GetFollowersResponse> call, Response<GetFollowersResponse> response) {
 
-                            List<Follower> followers = null;
-                            Integer nextCursor = null;
-                            String nextCursorStr = null;
-                            Integer previousCursor = null;
-                            String previousCursorStr = null;
 
                             if (response != null && response.body() != null && response.isSuccessful()) {
                                 followers = response.body().getUsers();
@@ -111,7 +132,7 @@ public class FollowersActivity extends AppCompatActivity {
                         }
                     });
 
-                    Call<GetUserInfoResponse> userInfo = apiService.getUserInfo(authorizationHeaderGetFollowers, id);
+                    userInfo = apiService.getUserInfo(authorizationHeaderGetFollowers, id);
                     userInfo.enqueue(new Callback<GetUserInfoResponse>() {
                         CircleImageView imgProfilePicture = (CircleImageView) findViewById(R.id.imgProfilePicture);
                         ImageView background_photo = (ImageView) findViewById(R.id.background_photo);
@@ -122,10 +143,12 @@ public class FollowersActivity extends AppCompatActivity {
                             if (response != null && response.body() != null && response.isSuccessful()) {
                                 UserInfo userInfo = new UserInfo(response.body().getName(), response.body().getProfile_image_url_https(), response.body().getProfile_background_image_url_https());
 
-                                Picasso.with(FollowersActivity.this).load(userInfo.getProfile_image_url_https()).into(imgProfilePicture);
+                                Picasso.with(FollowersActivity.this).load(userInfo.getProfile_image_url_https())
+                                        .into(imgProfilePicture);
                                 Picasso.with(FollowersActivity.this).load(userInfo.getProfile_background_image_url_https()).into(background_photo);
 
                                 numOfFollowers.setText(String.valueOf(numofFollowers) + " Followers");
+                                username.setText(userInfo.getName());
                             }
                         }
 
@@ -146,13 +169,16 @@ public class FollowersActivity extends AppCompatActivity {
             }
         });
 
+
     }
 
-
-    public static String base64Encode(String token) {
-        String result = Base64.encodeToString(token.getBytes(), Base64.DEFAULT);
-        result = result.replace("\n", "");
-        return result;
+    @Override
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override public void run() {
+                CallAPI();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        }, 1000);
     }
 }
-

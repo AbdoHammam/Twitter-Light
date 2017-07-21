@@ -52,7 +52,8 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.MyVi
 
         holder.username.setText(followers.get(position).getUsername());
         holder.screenname.setText(followers.get(position).getScreenname());
-        Picasso.with(context).load(followers.get(position).getProfilePicURL()).into(holder.imgProfilePicture);
+        Picasso.with(context).load(followers.get(position).getProfilePicURL()).
+                into(holder.imgProfilePicture);
         holder.bio.setText(followers.get(position).getBio());
         holder.id = followers.get(position).getId();
         holder.follower = followers.get(position);

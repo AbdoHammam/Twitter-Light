@@ -10,7 +10,6 @@
             android:id="@+id/imgProfilePicture"
             android:layout_width="60dp"
             android:layout_height="60dp"
-            android:src="@drawable/profilepic"
             android:layout_marginStart="15dp"
             app:border_width="1dp" />
         <LinearLayout
