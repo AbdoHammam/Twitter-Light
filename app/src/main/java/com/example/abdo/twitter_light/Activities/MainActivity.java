@@ -1,9 +1,12 @@
 package com.example.abdo.twitter_light.Activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.abdo.twitter_light.R;
 import com.twitter.sdk.android.core.Callback;
@@ -21,14 +24,24 @@ public class MainActivity extends AppCompatActivity {
     private String consumer_key;
     private String consumer_secret;
     String username;
-    Long id = 0L;
-
+    Long id = -1L;
+    SharedPreferences pref;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         InitTwitter();
         setContentView(R.layout.activity_main);
-        Login();
+        pref = getApplicationContext().getSharedPreferences("Twitter-Light",0); // 0 means private mode
+        id = pref.getLong("user_id",-1L);
+        if(id!=-1L)
+        {
+            Intent intent = new Intent(MainActivity.this, FollowersActivity.class);
+            intent.putExtra("id", id);
+            startActivity(intent);
+            finish();
+        }
+        else
+            Login();
     }
 
     private void InitTwitter() {
@@ -65,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
         loginButton.onActivityResult(requestCode, resultCode, data);
         Intent intent = new Intent(MainActivity.this, FollowersActivity.class);
         intent.putExtra("id", id);
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putLong("user_id",id);
+        editor.apply();
         startActivity(intent);
         finish();
     }
