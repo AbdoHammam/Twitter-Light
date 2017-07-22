@@ -1,0 +1,52 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+
+    <dimen name="activity_followers_background_photo_height">134dp</dimen>
+    <dimen name="activity_followers_imgProfilePicture_height">134dp</dimen>
+    <dimen name="activity_followers_imgProfilePicture_width">134dp</dimen>
+    <dimen name="activity_followers_imgProfilePicture_margintop">54dp</dimen>
+    <dimen name="activity_followers_imgProfilePicture_border_width">1dp</dimen>
+    <dimen name="activity_followers_username_margintop">14dp</dimen>
+    <dimen name="activity_followers_username_textsize">27sp</dimen>
+    <dimen name="activity_followers_linearlayout_margintop">14dp</dimen>
+    <dimen name="activity_followers_linearlayout_numoffollowings_width">240dp</dimen>
+    <dimen name="activity_followers_linearlayout_numoffollowings_textsize">24sp</dimen>
+    <dimen name="activity_followers_linearlayout_followers_marginstart">14dp</dimen>
+    <dimen name="activity_followers_linearlayout_followers_textsize">24sp</dimen>
+    <dimen name="activity_followers_followerslist_marginend">27dp</dimen>
+    <dimen name="activity_followers_followerslist_marginstart">27dp</dimen>
+    <dimen name="activity_followers_followerslist_margintop">14dp</dimen>
+
+    <dimen name="activity_main_twitterlogo_height">134dp</dimen>
+    <dimen name="activity_main_twitterlogo_marginbottom">67dp</dimen>
+    <dimen name="activity_main_twitterlogo_marginend">40dp</dimen>
+    <dimen name="activity_main_twitterlogo_marginstart">40dp</dimen>
+    <dimen name="activity_main_twitterlogo_margintop">134dp</dimen>
+    <dimen name="activity_main_checkbox_margintop">20dp</dimen>
+
+    <dimen name="activity_tweets_backgroundphoto_height">80dp</dimen>
+    <dimen name="activity_tweets_imgprofilepicture_width">80dp</dimen>
+    <dimen name="activity_tweets_imgprofilepicture_height">80dp</dimen>
+    <dimen name="activity_tweets_imgprofilepicture_margintop">54dp</dimen>
+    <dimen name="activity_tweets_imgprofilepicture_border_width">1dp</dimen>
+    <dimen name="activity_tweets_username_margintop">14dp</dimen>
+    <dimen name="activity_tweets_username_textsize">22sp</dimen>
+    <dimen name="activity_tweets_listtweets_marginend">22dp</dimen>
+    <dimen name="activity_tweets_listtweets_marginstart">22dp</dimen>
+    <dimen name="activity_tweets_listtweets_margintop">7dp</dimen>
+    <dimen name="activity_tweets_listtweets_dividerheight">1dp</dimen>
+    <dimen name="activity_tweets_linearlayout_margintop">14dp</dimen>
+
+    <dimen name="user_layout_imgprofilepicture_width">80dp</dimen>
+    <dimen name="user_layout_imgprofilepicture_height">80dp</dimen>
+    <dimen name="user_layout_imgprofilepicture_marginstart">20dp</dimen>
+    <dimen name="user_layout_imgprofilepicture_border_width">1dp</dimen>
+    <dimen name="user_layout_linearlayout_marginstart">14dp</dimen>
+    <dimen name="user_layout_username_textsize">22sp</dimen>
+    <dimen name="user_layout_screenname_textsize">19sp</dimen>
+    <dimen name="user_layout_secondlinearlayout_height">1dp</dimen>
+    <dimen name="user_layout_secondlinearlayout_marginend">14dp</dimen>
+    <dimen name="user_layout_secondlinearlayout_marginstart">14dp</dimen>
+    <dimen name="user_layout_secondlinearlayout_margintop">7dp</dimen>
+
+</resources>

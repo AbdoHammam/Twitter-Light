@@ -32,7 +32,6 @@ public class TweetsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tweets);
         Bundle bundle = getIntent().getExtras();
         id = bundle.getLong("id");
-        Toast.makeText(TweetsActivity.this,String.valueOf(id),Toast.LENGTH_LONG).show();
         final UserTimeline userTimeline = new UserTimeline.Builder().maxItemsPerRequest(10).includeRetweets(false)
                 .userId(id)
                 .build();

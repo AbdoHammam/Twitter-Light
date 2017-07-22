@@ -18,8 +18,8 @@ import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 public class MainActivity extends AppCompatActivity {
     TwitterLoginButton loginButton;
-    public static final String twitter_key = "Dme1JtqTXCTPssqoQTUEnIwSK";
-    public static final String twitter_secret = "5tOImBv1N5VIZXspuqcygPDmSRjGKboaQE1Lj6RFM8sda20yOk";
+    private String consumer_key;
+    private String consumer_secret;
     String username;
     Long id = 0L;
 
@@ -32,9 +32,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void InitTwitter() {
+        consumer_key = getResources().getString(R.string.consumer_key);
+        consumer_secret = getResources().getString(R.string.consumer_secret);
         TwitterConfig config = new TwitterConfig.Builder(this)
                 .logger(new DefaultLogger(Log.DEBUG))
-                .twitterAuthConfig(new TwitterAuthConfig(twitter_key, twitter_secret))
+                .twitterAuthConfig(new TwitterAuthConfig(consumer_key, consumer_secret))
                 .debug(true)
                 .build();
         Twitter.initialize(config);

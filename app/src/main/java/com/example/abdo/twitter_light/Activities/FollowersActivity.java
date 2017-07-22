@@ -1,5 +1,6 @@
 package com.example.abdo.twitter_light.Activities;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -28,15 +29,15 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-
+//TODO : Cache data
 public class FollowersActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
     Long id;
     int numofFollowers = 0;
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private FollowersAdapter adapter;
-    public static final String consumer_key = "Dme1JtqTXCTPssqoQTUEnIwSK";
-    public static final String consumer_secret = "5tOImBv1N5VIZXspuqcygPDmSRjGKboaQE1Lj6RFM8sda20yOk";
+    private String consumer_key;
+    private String consumer_secret;
     public static String authorizationHeaderGetFollowers;
     TextView username;
     String encodedBase64;
@@ -64,6 +65,8 @@ public class FollowersActivity extends AppCompatActivity implements SwipeRefresh
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.SwipeRefreshLayout);
         username = (TextView) findViewById(R.id.username);
         Bundle bundle = getIntent().getExtras();
+        consumer_key = getResources().getString(R.string.consumer_key);
+        consumer_secret = getResources().getString(R.string.consumer_secret);
         id = bundle.getLong("id");
 
         recyclerView = (RecyclerView) findViewById(R.id.followersList);
@@ -74,8 +77,8 @@ public class FollowersActivity extends AppCompatActivity implements SwipeRefresh
         recyclerView.setAdapter(adapter);
         encodedBase64 = base64Encode(consumer_key + ":" + consumer_secret);
         authorizationHeader = "Basic " + encodedBase64;
-        contentTypeHeader = "application/x-www-form-urlencoded;charset=UTF-8";
-        body = "client_credentials";
+        contentTypeHeader = getResources().getString(R.string.contentTypeHeader);
+        body = getResources().getString(R.string.auth_body);
         CallAPI();
         swipeRefreshLayout.setOnRefreshListener(this);
     }
@@ -122,13 +125,13 @@ public class FollowersActivity extends AppCompatActivity implements SwipeRefresh
                                     adapter.updateAdapter(followers);
                                 }
                             } else {
-                                Toast.makeText(getApplicationContext(), "Can't connect to server", Toast.LENGTH_LONG).show();
+                                Toast.makeText(getApplicationContext(),getResources().getString(R.string.error_message) , Toast.LENGTH_LONG).show();
                             }
                         }
 
                         @Override
                         public void onFailure(Call<GetFollowersResponse> call, Throwable t) {
-                            Toast.makeText(getApplicationContext(), "Can't connect to server", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_message), Toast.LENGTH_LONG).show();
                         }
                     });
 
@@ -138,6 +141,7 @@ public class FollowersActivity extends AppCompatActivity implements SwipeRefresh
                         ImageView background_photo = (ImageView) findViewById(R.id.background_photo);
                         TextView numOfFollowers = (TextView) findViewById(R.id.numOfFollowers);
 
+                        @SuppressLint("SetTextI18n")
                         @Override
                         public void onResponse(Call<GetUserInfoResponse> call, Response<GetUserInfoResponse> response) {
                             if (response != null && response.body() != null && response.isSuccessful()) {
@@ -159,13 +163,13 @@ public class FollowersActivity extends AppCompatActivity implements SwipeRefresh
                     });
 
                 } else {
-                    Toast.makeText(getApplicationContext(), "Can't connect to server", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_message), Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<OAuthResponse> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Can't connect to server", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_message), Toast.LENGTH_LONG).show();
             }
         });
 

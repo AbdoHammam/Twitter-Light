@@ -21,7 +21,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Created by abdo on 6/14/17.
  */
-
+// add an adapter to set the list of followers in the FollowersActivity
 public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.MyViewHolder> {
     private List<Follower> followers;
 

@@ -1,3 +1,8 @@
 <resources>
-    <string name="app_name">" Twitter-Light"</string>
+    <string name="app_name">"Twitter-Light"</string>
+    <string name="consumer_key">Dme1JtqTXCTPssqoQTUEnIwSK</string>
+    <string name="consumer_secret">5tOImBv1N5VIZXspuqcygPDmSRjGKboaQE1Lj6RFM8sda20yOk</string>
+    <string name="auth_body">client_credentials</string>
+    <string name="contentTypeHeader">application/x-www-form-urlencoded;charset=UTF-8</string>
+    <string name="error_message">"Can't connect to server"</string>
 </resources>
