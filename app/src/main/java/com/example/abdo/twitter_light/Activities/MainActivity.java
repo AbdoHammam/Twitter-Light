@@ -3,6 +3,8 @@ package com.example.abdo.twitter_light.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -29,9 +31,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        InitTwitter();
         setContentView(R.layout.activity_main);
-        pref = getApplicationContext().getSharedPreferences("Twitter-Light",0); // 0 means private mode
+        InitTwitter();
+        pref = getApplicationContext().getSharedPreferences(getResources().getString(R.string.app_name),0); // 0 means private mode
         id = pref.getLong("user_id",-1L);
         if(id!=-1L)
         {
@@ -40,8 +42,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-        else
+        else if(isNetworkAvailable())
             Login();
+        else
+            Toast.makeText(MainActivity.this,"Check your internet connection",Toast.LENGTH_SHORT).show();
     }
 
     private void InitTwitter() {
@@ -83,6 +87,12 @@ public class MainActivity extends AppCompatActivity {
         editor.apply();
         startActivity(intent);
         finish();
+    }
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }
 
