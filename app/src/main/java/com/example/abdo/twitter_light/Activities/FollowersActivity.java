@@ -167,7 +167,7 @@ public class FollowersActivity extends AppCompatActivity implements SwipeRefresh
                                 editor.putString("currentUsername",userInfo.getName());
                                 editor.putString("currentUserProfilePic",userInfo.getProfile_image_url_https()); // Picasso caches the image if the url has been used before
                                 editor.putString("currentUserBackgroundImage",userInfo.getProfile_background_image_url_https());
-
+                                editor.apply();
                             }
                         }
 
