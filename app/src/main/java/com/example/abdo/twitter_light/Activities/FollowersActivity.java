@@ -1,7 +1,10 @@
 package com.example.abdo.twitter_light.Activities;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -108,9 +111,10 @@ public class FollowersActivity extends AppCompatActivity implements SwipeRefresh
                     apiServiceGetFollowers = ApiClient.getApiClient().create(ApiInterface.class);
                     callGetFollowers = apiServiceGetFollowers.getFollowers(authorizationHeaderGetFollowers, cursor, id);
                     callGetFollowers.enqueue(new Callback<GetFollowersResponse>() {
+                        @SuppressLint("SetTextI18n")
                         @Override
                         public void onResponse(Call<GetFollowersResponse> call, Response<GetFollowersResponse> response) {
-
+                            TextView numOfFollowers = (TextView) findViewById(R.id.numOfFollowers);
                             if (response != null && response.body() != null && response.isSuccessful()) {
                                 followers = response.body().getUsers();
                                 nextCursor = response.body().getNextCursor();
@@ -125,20 +129,40 @@ public class FollowersActivity extends AppCompatActivity implements SwipeRefresh
                                 if (adapter != null) {
                                     adapter.updateAdapter(followers);
                                     SharedPreferences.Editor editor = pref.edit();
-                                    editor.putInt("numOfFollowers",numofFollowers);
-                                    for(int i=0 ; i < numofFollowers ; i++)
+                                    if(isNetworkAvailable())
                                     {
-                                        editor.putString("Follower#"+String.valueOf(i)+"username",followers.get(i).getUsername());
-                                        editor.putString("Follower#"+String.valueOf(i)+"bio",followers.get(i).getBio());
-                                        editor.putString("Follower#"+String.valueOf(i)+"profilePic",followers.get(i).getProfilePicURL());
-                                        editor.putLong("Follower#"+String.valueOf(i)+"id",followers.get(i).getId());
+                                        editor.putInt("numOfFollowers",numofFollowers);
+                                        for(int i=0 ; i < numofFollowers ; i++)
+                                        {
+                                            editor.putString("Follower#"+String.valueOf(i)+"username",followers.get(i).getUsername());
+                                            editor.putString("Follower#"+String.valueOf(i)+"bio",followers.get(i).getBio());
+                                            editor.putString("Follower#"+String.valueOf(i)+"profilePic",followers.get(i).getProfilePicURL());
+                                            editor.putLong("Follower#"+String.valueOf(i)+"id",followers.get(i).getId());
 
+                                        }
+                                        editor.apply();
                                     }
-                                    editor.apply();
+                                    else
+                                    {
+                                        followers.clear();
+                                        Follower temp = new Follower();
+                                        for(int i=0 ; i < numofFollowers ; i++)
+                                        {
+                                            temp.setUsername(pref.getString("Follower#"+String.valueOf(i)+"username",""));
+                                            temp.setBio(pref.getString("Follower#"+String.valueOf(i)+"bio",""));
+                                            temp.setProfilePicURL(pref.getString("Follower#"+String.valueOf(i)+"profilePic",""));
+                                            temp.setId(pref.getLong("Follower#"+String.valueOf(i)+"id",0));
+                                            followers.add(temp);
+                                        }
+                                    }
                                 }
                             } else {
+                                numofFollowers = pref.getInt("numOfFollowers",0);
                                 Toast.makeText(getApplicationContext(),getResources().getString(R.string.error_message) , Toast.LENGTH_LONG).show();
                             }
+                            numOfFollowers.setText(String.valueOf(numofFollowers) + " Followers");
+
+                            adapter.updateAdapter(followers);
                         }
 
                         @Override
@@ -151,8 +175,7 @@ public class FollowersActivity extends AppCompatActivity implements SwipeRefresh
                     userInfo.enqueue(new Callback<GetUserInfoResponse>() {
                         CircleImageView imgProfilePicture = (CircleImageView) findViewById(R.id.imgProfilePicture);
                         ImageView background_photo = (ImageView) findViewById(R.id.background_photo);
-                        TextView numOfFollowers = (TextView) findViewById(R.id.numOfFollowers);
-                        @SuppressLint("SetTextI18n")
+                        
                         @Override
                         public void onResponse(Call<GetUserInfoResponse> call, Response<GetUserInfoResponse> response) {
                             if (response != null && response.body() != null && response.isSuccessful()) {
@@ -162,17 +185,30 @@ public class FollowersActivity extends AppCompatActivity implements SwipeRefresh
                                         .into(imgProfilePicture);
                                 Picasso.with(FollowersActivity.this).load(userInfo.getProfile_background_image_url_https()).into(background_photo);
                                 SharedPreferences.Editor editor = pref.edit();
-                                numOfFollowers.setText(String.valueOf(numofFollowers) + " Followers");
+
                                 username.setText(userInfo.getName());
                                 editor.putString("currentUsername",userInfo.getName());
                                 editor.putString("currentUserProfilePic",userInfo.getProfile_image_url_https()); // Picasso caches the image if the url has been used before
                                 editor.putString("currentUserBackgroundImage",userInfo.getProfile_background_image_url_https());
                                 editor.apply();
                             }
+                            else
+                            {
+                                UserInfo userInfo = new UserInfo();
+                                userInfo.setName(pref.getString("currentUsername",""));
+                                userInfo.setProfile_image_url_https(pref.getString("currentUserProfilePic",""));
+                                userInfo.setProfile_background_image_url_https(pref.getString("currentUserBackgroundImage",""));
+
+                                Picasso.with(FollowersActivity.this).load(userInfo.getProfile_image_url_https())
+                                        .into(imgProfilePicture);
+                                Picasso.with(FollowersActivity.this).load(userInfo.getProfile_background_image_url_https()).into(background_photo);
+                                username.setText(userInfo.getName());
+                            }
                         }
 
                         @Override
                         public void onFailure(Call<GetUserInfoResponse> call, Throwable t) {
+
 
                         }
                     });
@@ -199,5 +235,11 @@ public class FollowersActivity extends AppCompatActivity implements SwipeRefresh
                 swipeRefreshLayout.setRefreshing(false);
             }
         }, 1000);
+    }
+    public boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 }

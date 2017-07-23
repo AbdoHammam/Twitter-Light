@@ -56,6 +56,7 @@ public class TweetsActivity extends AppCompatActivity {
                     Picasso.with(TweetsActivity.this).load(userInfo.getProfile_image_url_https())
                             .resize(imgProfilePicture.getWidth(), imgProfilePicture.getHeight()).
                             into(imgProfilePicture);
+                    Toast.makeText(TweetsActivity.this,userInfo.getProfile_background_image_url_https(),Toast.LENGTH_LONG).show();
                     Picasso.with(TweetsActivity.this).load(userInfo.getProfile_background_image_url_https()).
                     into(background_photo);
                     username.setText(userInfo.getName());

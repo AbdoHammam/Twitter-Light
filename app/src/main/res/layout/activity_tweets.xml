@@ -15,7 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:id="@+id/background_photo"
-            android:background="@drawable/twitter_logo"
             android:contentDescription=""
             />
 
