@@ -32,9 +32,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        InitTwitter();
+        InitTwitter(); // Initialize twitter API
         pref = getApplicationContext().getSharedPreferences(getResources().getString(R.string.app_name),0); // 0 means private mode
-        id = pref.getLong("user_id",-1L);
+        id = pref.getLong("user_id",-1L); // Cache the user id to be able to login automatically without authentication in every time
         if(id!=-1L)
         {
             Intent intent = new Intent(MainActivity.this, FollowersActivity.class);
@@ -88,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+    //Check if there's internet connection or no to make the user able to login and get his data
     public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);

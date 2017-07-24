@@ -66,6 +66,7 @@ public class FollowersActivity extends AppCompatActivity implements SwipeRefresh
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_followers);
+        // Initialize data and its holders
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.SwipeRefreshLayout);
         username = (TextView) findViewById(R.id.username);
         Bundle bundle = getIntent().getExtras();
@@ -88,23 +89,26 @@ public class FollowersActivity extends AppCompatActivity implements SwipeRefresh
         pref = getApplicationContext().getSharedPreferences(getResources().getString(R.string.app_name),0);
     }
 
-
+    // base64Encode to be encode twitter consumer key and secret to be able to make "application-only" authentication
     public static String base64Encode(String token) {
         String result = Base64.encodeToString(token.getBytes(), Base64.DEFAULT);
         result = result.replace("\n", "");
         return result;
     }
+    // Call the API to load the data
     public void CallAPI()
     {
         apiService = ApiClient.getApiClient().create(ApiInterface.class);
         call = apiService.authenticate(authorizationHeader, contentTypeHeader, body);
         call.enqueue(new Callback<OAuthResponse>() {
             @Override
+            // Read the authentication response to read the access token which allows the developer to get data using twitter API
             public void onResponse(Call<OAuthResponse> call, Response<OAuthResponse> response) {
                 if (response != null && response.body() != null && response.isSuccessful()) {
                     tokenType = response.body().getTokenType();
                     accessToken = response.body().getAccessToken();
                 }
+                // Add a header to get followers of the logged in user
                 if (tokenType != null && accessToken != null) {
                     authorizationHeaderGetFollowers = "Bearer " + accessToken;
                     cursor = -1;
@@ -131,6 +135,7 @@ public class FollowersActivity extends AppCompatActivity implements SwipeRefresh
                                     SharedPreferences.Editor editor = pref.edit();
                                     if(isNetworkAvailable())
                                     {
+                                        //Cache the followers
                                         editor.putInt("numOfFollowers",numofFollowers);
                                         for(int i=0 ; i < numofFollowers ; i++)
                                         {
@@ -144,7 +149,6 @@ public class FollowersActivity extends AppCompatActivity implements SwipeRefresh
                                     }
                                     else
                                     {
-                                        followers.clear();
                                         Follower temp = new Follower();
                                         for(int i=0 ; i < numofFollowers ; i++)
                                         {
@@ -170,12 +174,12 @@ public class FollowersActivity extends AppCompatActivity implements SwipeRefresh
                             Toast.makeText(getApplicationContext(), getResources().getString(R.string.error_message), Toast.LENGTH_LONG).show();
                         }
                     });
-
+                    // Get the logged in user data
                     userInfo = apiService.getUserInfo(authorizationHeaderGetFollowers, id);
                     userInfo.enqueue(new Callback<GetUserInfoResponse>() {
                         CircleImageView imgProfilePicture = (CircleImageView) findViewById(R.id.imgProfilePicture);
                         ImageView background_photo = (ImageView) findViewById(R.id.background_photo);
-                        
+
                         @Override
                         public void onResponse(Call<GetUserInfoResponse> call, Response<GetUserInfoResponse> response) {
                             if (response != null && response.body() != null && response.isSuccessful()) {

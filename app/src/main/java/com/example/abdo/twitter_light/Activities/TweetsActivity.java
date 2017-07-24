@@ -32,6 +32,7 @@ public class TweetsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_tweets);
         Bundle bundle = getIntent().getExtras();
         id = bundle.getLong("id");
+        // Load the last 10 tweets of the user timeline
         final UserTimeline userTimeline = new UserTimeline.Builder().maxItemsPerRequest(10).includeRetweets(false)
                 .userId(id)
                 .build();
